@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CG Scene</title>
+    <script type="text/javascript" src="../libs/three.js"></script>
+    <script></script>
+    <script type="text/javascript" src="../libs/stats.js"></script>
+    <script type="text/javascript" src="../libs/dat.gui.js"></script>
+
+    <script type="text/javascript" src="../libs/tween.min.js"></script>
+
+    <script type="text/javascript" src="../libs/ParametricGeometries.js"></script>
+    <script type="text/javascript" src="../libs/ConvexGeometry.js"></script>
+
+    <script type="text/javascript" src="../libs/chroma.js"></script>
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <!-- <h1 >Dawn OF Modern Physics</h1> -->
+</head>
+
+
+<body>
+     
+<div id="Stats-output">
+</div>
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+</div>
+
+<!-- Javascript code that runs our Three.js examples -->
+<script type="text/javascript">
+
+    // once everything is loaded, we run our Three.js stuff.
+    function init() {
+
+        var stats = initStats();
+
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
+        var scene = new THREE.Scene();
+     
+
+        // create a camera, which defines where we're looking at.
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // create a render and set the size
+        var renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+
+        renderer.setClearColor(new THREE.Color(0xaaaaff, 1.0));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+
+
+//hand code
+        var step = 0;
+        var mesh;
+        var clock = new THREE.Clock();
+        var loader = new THREE.JSONLoader();
+        loader.load('../assets/models/hand-1.js', function (geometry, mat) {
+            var mat = new THREE.MeshBasicMaterial({color: 0xBDB76B, skinning: true});
+            mesh = new THREE.SkinnedMesh(geometry, mat);
+
+            var mat2 = new THREE.MeshBasicMaterial({color: 0xBDB76B, skinning: true});
+            mesh2 = new THREE.SkinnedMesh(geometry, mat2);
+
+            // rotate the complete hand
+            mesh.rotation.x = 0.5 * Math.PI;
+            mesh.rotation.z = 0.7 * Math.PI;
+            mesh.position.x = 40;
+            mesh.position.y = 3.1;
+            mesh.position.z = 27;
+            // add the mesh
+            scene.add(mesh);
+
+            // rotate the complete hand
+            mesh2.rotation.x = 0.5 * Math.PI;
+            mesh2.rotation.z = -0.7 * Math.PI;
+            mesh2.rotation.y = 0.05 * Math.PI;
+            mesh2.position.x = 22;
+            mesh2.position.y = 6.5;
+            mesh2.scale.x=0.85
+            mesh2.position.z = 26;
+            // add the mesh
+            scene.add(mesh2);
+
+        }, '../assets/models');
+
+        var onUpdate = function () {
+            var pos = this.pos;
+            console.log(mesh.skeleton);
+        };
+
+//end of hand
+
+        // create the ground plane
+        var textureGrass = THREE.ImageUtils.loadTexture("../assets/grasslight-big.jpg");
+        textureGrass.wrapS = THREE.RepeatWrapping;
+        textureGrass.wrapT = THREE.RepeatWrapping;
+        textureGrass.repeat.set(10, 10);
+        
+        // now do something with our mesh!
+        var planeGeometry = new THREE.PlaneGeometry(1000, 200, 20, 20);
+        var planeMaterial = new THREE.MeshLambertMaterial({map: textureGrass});
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.receiveShadow = true;
+
+        // rotate and position the plane
+        plane.rotation.x = -0.5 * Math.PI;
+        plane.position.x = 15;
+        plane.position.y = 0;
+        plane.position.z = 0;
+
+        // add the plane to the scene
+        scene.add(plane);
+
+        //Mountains from left to right
+        var mountain1Geometry = new THREE.CylinderGeometry(1, 18, 18);
+        var mountain1Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var mountain1 = new THREE.Mesh(mountain1Geometry, mountain1Material);
+        mountain1.castShadow = true;
+
+        mountain1.position.x = -25.5;
+        mountain1.position.y = 1.5;
+        mountain1.position.z = -15;
+
+        scene.add(mountain1);
+        
+        var mountain2Geometry = new THREE.CylinderGeometry(0.71, 27, 28);
+        var mountain2Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var mountain2 = new THREE.Mesh(mountain2Geometry, mountain2Material);
+        mountain2.castShadow = true;
+
+        
+        mountain2.position.x = -7.5;
+        mountain2.position.y = 1.5;
+        mountain2.position.z = -35;
+
+        scene.add(mountain2);
+
+        var mountain3Geometry = new THREE.CylinderGeometry(0.71, 32, 18);
+        var mountain3Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var mountain3 = new THREE.Mesh(mountain3Geometry, mountain3Material);
+        mountain3.castShadow = true;
+
+        mountain3.position.x = 18;
+        mountain3.position.y = 3.5;
+        mountain3.position.z = -45.5;
+
+        scene.add(mountain3);
+        
+        var mountain4Geometry = new THREE.CylinderGeometry(0.51, 28, 18);
+        var mountain4Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var mountain4 = new THREE.Mesh(mountain4Geometry, mountain4Material);
+        mountain4.castShadow = true;
+
+        mountain4.position.x = 38;
+        mountain4.position.y = 4.5;
+        mountain4.position.z = -45.5;
+
+        scene.add(mountain4);
+        
+        var mountain5Geometry = new THREE.CylinderGeometry(0.51, 48, 18);
+        var mountain5Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var mountain5 = new THREE.Mesh(mountain5Geometry, mountain5Material);
+        mountain5.castShadow = true;
+
+        mountain5.position.x = -38;
+        mountain5.position.y = 4.5;
+        mountain5.position.z = -45.5;
+
+        scene.add(mountain5);
+
+        //tree top1
+        var tree_1_topGeometry = new THREE.IcosahedronGeometry(7);
+        var tree_1_topMaterial = new THREE.MeshLambertMaterial({color: 0x40EE95});
+        var tree_1_top = new THREE.Mesh(tree_1_topGeometry, tree_1_topMaterial);
+        tree_1_top.castShadow = true;
+
+        tree_1_top.position.x = 35;
+        tree_1_top.position.y = 13.5;
+        tree_1_top.position.z = 25.5;
+
+        scene.add(tree_1_top);
+
+        var tree_2_topGeometry = new THREE.IcosahedronGeometry(7);
+        var tree_2_topMaterial = new THREE.MeshLambertMaterial({color: 0x40EE95});
+        var tree_2_top = new THREE.Mesh(tree_2_topGeometry, tree_2_topMaterial);
+        tree_2_top.castShadow = true;
+
+        tree_2_top.position.x = 45;
+        tree_2_top.position.y = 13.5;
+        tree_2_top.position.z = 15.5;
+
+        scene.add(tree_2_top);
+
+        //Circular rainbow rings
+        var points = [
+                new THREE.Vector3(2, 2, 2),
+                new THREE.Vector3(2, 2, -2),
+                new THREE.Vector3(-2, 2, -2),
+                new THREE.Vector3(-2, 2, 2),
+                new THREE.Vector3(2, -2, 2),
+                new THREE.Vector3(2, -2, -2),
+                new THREE.Vector3(-2, -2, -2),
+                new THREE.Vector3(-2, -2, 2)
+            ];
+        
+            
+        var pts = [];
+            var detail = .1;
+            var radius = 3;
+            for (var angle = -0.1; angle < Math.PI; angle += detail)
+                pts.push(new THREE.Vector3(Math.cos(angle) * radius, 9, Math.sin(angle) * radius));
+
+        var cGeometry = new THREE.LatheGeometry(pts, 50);
+        var cMaterial = new THREE.MeshLambertMaterial({color: 0xFF8600});
+        var c = new THREE.Mesh(cGeometry, cMaterial);
+        c.castShadow = true;
+
+        c.position.x = 50;
+        c.position.y = 9;
+        c.position.z = -30;
+
+        scene.add(c);
+
+        //c2
+        var c1Geometry = new THREE.LatheGeometry(pts, 50);
+        var c1Material = new THREE.MeshLambertMaterial({color: 0x3500FF});
+        var c1 = new THREE.Mesh(c1Geometry, c1Material);
+        c1.castShadow = true;
+
+        c1.position.x = 60;
+        c1.position.y = 9;
+        c1.position.z = -30;
+
+        scene.add(c1);
+
+        //c3
+        var c2Geometry = new THREE.LatheGeometry(pts, 50);
+        var c2Material = new THREE.MeshLambertMaterial({color: 0x01FE01});
+        var c2 = new THREE.Mesh(c2Geometry, c2Material);
+        c2.castShadow = true;
+
+        c2.position.x = 70;
+        c2.position.y = 9;
+        c2.position.z = -30;
+
+        scene.add(c2);
+        
+        //c4
+        var c3Geometry = new THREE.LatheGeometry(pts, 50);
+        var c3Material = new THREE.MeshLambertMaterial({color: 0xFFFE37});
+        var c3 = new THREE.Mesh(c3Geometry, c3Material);
+        c3.castShadow = true;
+
+        c3.position.x = 80;
+        c3.position.y = 9;
+        c3.position.z = -23;
+
+        scene.add(c3);
+
+        //c5
+        var c4Geometry = new THREE.LatheGeometry(pts, 50);
+        var c4Material = new THREE.MeshLambertMaterial({color: 0xED0003});
+        var c4 = new THREE.Mesh(c4Geometry, c4Material);
+        c4.castShadow = true;
+
+        c4.position.x = 90;
+        c4.position.y = 9;
+        c4.position.z = -23;
+
+        scene.add(c4);
+
+        //c6
+        var c5Geometry = new THREE.LatheGeometry(pts, 50);
+        var c5Material = new THREE.MeshLambertMaterial({color: 0x01FE01});
+        var c5 = new THREE.Mesh(c5Geometry, c5Material);
+        c5.castShadow = true;
+
+        c5.position.x = 100;
+        c5.position.y = 9;
+        c5.position.z = -23;
+
+        scene.add(c5);
+
+        //head of person
+        var headGeometry = new THREE.SphereGeometry(1.1, 10.5, 5);
+        var headMaterial = new THREE.MeshLambertMaterial({color: 0x2194ce});
+        var head = new THREE.Mesh(headGeometry, headMaterial);
+
+        head.position.x = 39;
+        head.position.y = 6.5;
+        head.position.z = 23;
+        head.castShadow = true;
+
+        scene.add(head);
+
+        
+        //eye
+        var eyeGeometry = new THREE.SphereGeometry(0.3, 10.5, 5);
+        var eyeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+        var eye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+
+        eye.position.x = 36;
+        eye.position.y = 6.8;
+        eye.position.z = 23;
+        eye.castShadow = true;
+
+        scene.add(eye);
+
+        
+        //eye2
+        var eye2Geometry = new THREE.SphereGeometry(0.3, 10.5, 5);
+        var eye2Material = new THREE.MeshLambertMaterial({color: 0xffffff});
+        var eye2 = new THREE.Mesh(eye2Geometry, eye2Material);
+
+        eye2.position.x = 37;
+        eye2.position.y = 6.8;
+        eye2.position.z = 24;
+        eye2.castShadow = true;
+
+        scene.add(eye2);
+
+        //man body
+        var geom = new THREE.Geometry();
+        var v1 = new THREE.Vector3(0, 0, 0);
+        var v2 = new THREE.Vector3(12, 0, 0);
+        var v3 = new THREE.Vector3(9, 5, 0);
+        var triangle = new THREE.Triangle(v1, v2, v3);
+        
+        var normal = triangle.normal();
+        geom.vertices.push(triangle.a);
+        geom.vertices.push(triangle.b);
+        geom.vertices.push(triangle.c);
+        geom.faces.push(new THREE.Face3(0, 1, 2, normal));
+        var mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color: 0x2B547E, side: 3, shading: THREE.FlatShading}));
+        mesh.position.x = 30;
+        mesh.position.y = 1;
+        mesh.position.z = 23;
+        mesh.castShadow = true;
+        scene.add(mesh);
+
+        // arm
+        var armGeometry = new THREE.BoxGeometry(1.5, -0.5, -7);
+        var armMaterial = new THREE.MeshLambertMaterial({color: 0x2194ce});
+        var arm = new THREE.Mesh(armGeometry, armMaterial);
+        arm.castShadow = true;
+
+        arm.position.x = 38;
+        arm.position.y = 3.5;
+        arm.position.z = 23;
+
+        scene.add(arm);
+
+        // legs
+        var arGeometry = new THREE.BoxGeometry(0.25, -0.5, -2.5);
+        var arMaterial = new THREE.MeshBasicMaterial({color: 0xBDB76B});
+        var ar = new THREE.Mesh(arGeometry, arMaterial);
+        ar.castShadow = true;
+
+        ar.position.x = 25;
+        ar.position.y = 2.5;
+        ar.position.z = 25;
+
+        scene.add(ar);
+        
+        //nose
+        
+        var noseGeometry = new THREE.BoxGeometry(0.15, -0.25, -0.35);
+        var noseMaterial = new THREE.MeshBasicMaterial({color: 0xBDB76B});
+        var nose = new THREE.Mesh(noseGeometry, noseMaterial);
+        nose.castShadow = true;
+
+        nose.position.x = 25;
+        nose.rotation.x =1.59;
+        nose.position.y = 8.1;
+        nose.position.z = 27.7;
+
+        scene.add(nose);
+        // stem1
+        var stemGeometry = new THREE.BoxGeometry(2.5, 25.5, 1);
+        var stemMaterial = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var stem = new THREE.Mesh(stemGeometry, stemMaterial);
+        stem.castShadow = true;
+
+        stem.position.x = 50;
+        stem.position.y = -2.5;
+        stem.position.z = 13;
+
+        scene.add(stem);
+
+
+        // //tree stem2
+        var stem2Geometry = new THREE.BoxGeometry(2.5, 25.5, 1);
+        var stem2Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var stem2 = new THREE.Mesh(stem2Geometry, stem2Material);
+        stem2.castShadow = true;
+
+        stem2.position.x = 43;
+        stem2.position.y = -2.5;
+        stem2.position.z = 23;
+
+        scene.add(stem2);
+
+        //apple
+        var sphereGeometry = new THREE.SphereGeometry(0.5, 10.5, 5);
+        var sphereMaterial = new THREE.MeshLambertMaterial({color: 0xff3333});
+        var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+        sphere.position.x = 35;
+        sphere.position.y = 2.5;
+        sphere.position.z = 20;
+        sphere.castShadow = true;
+
+        scene.add(sphere);
+
+        // position and point the camera to the center of the scene
+        camera.position.x = -20;
+        camera.position.y = 15;
+        camera.position.z = 45;
+        camera.lookAt(new THREE.Vector3(10, 0, 0));
+
+        // add subtle ambient lighting
+        var ambiColor = "#1c1c1c";
+        var ambientLight = new THREE.AmbientLight(ambiColor);
+        scene.add(ambientLight);
+
+        // add spotlight for a bit of light
+        var spotLight0 = new THREE.SpotLight(0xcccccc);
+        spotLight0.position.set(-40, 60, -10);
+        spotLight0.lookAt(plane);
+        scene.add(spotLight0);
+
+        var target = new THREE.Object3D();
+        target.position = new THREE.Vector3(5, 0, 0);
+
+
+        var pointColor = "#ffffff";
+//    var spotLight = new THREE.SpotLight( pointColor);
+        var spotLight = new THREE.DirectionalLight(pointColor);
+        spotLight.position.set(30, 10, -50);
+        spotLight.castShadow = true;
+        spotLight.shadowCameraNear = 0.1;
+        spotLight.shadowCameraFar = 100;
+        spotLight.shadowCameraFov = 50;
+        spotLight.target = plane;
+        spotLight.distance = 0;
+        spotLight.shadowCameraNear = 2;
+        spotLight.shadowCameraFar = 200;
+        spotLight.shadowCameraLeft = -100;
+        spotLight.shadowCameraRight = 100;
+        spotLight.shadowCameraTop = 100;
+        spotLight.shadowCameraBottom = -100;
+        spotLight.shadowMapWidth = 2048;
+        spotLight.shadowMapHeight = 2048;
+
+        scene.add(spotLight);
+
+        // add the output of the renderer to the html element
+        document.getElementById("WebGL-output").appendChild(renderer.domElement);
+
+        // call the render function
+        var step = 0;
+
+        // used to determine the switch point for the light animation
+        var invert = 1;
+        var phase = 0;
+
+        var controls = new function () {
+            this.rotationSpeed = 0.03;
+            this.bouncingSpeed = 0.03;
+            this.ambientColor = ambiColor;
+            this.pointColor = pointColor;
+            this.intensity = 0.1;
+            this.distance = 0;
+            this.exponent = 30;
+            this.angle = 0.1;
+            this.debug = false;
+            this.castShadow = true;
+            this.onlyShadow = false;
+            this.target = "Plane";
+
+        };
+
+        var textureFlare0 = THREE.ImageUtils.loadTexture("../assets/lensflare0.png");
+        var textureFlare3 = THREE.ImageUtils.loadTexture("../assets/lensflare3.png");
+
+        var flareColor = new THREE.Color(0xffaacc);
+        var lensFlare = new THREE.LensFlare(textureFlare0, 350, 0.0, THREE.AdditiveBlending, flareColor);
+
+        lensFlare.add(textureFlare3, 60, 0.6, THREE.AdditiveBlending);
+        lensFlare.add(textureFlare3, 70, 0.7, THREE.AdditiveBlending);
+        lensFlare.add(textureFlare3, 120, 0.9, THREE.AdditiveBlending);
+        lensFlare.add(textureFlare3, 70, 1.0, THREE.AdditiveBlending);
+
+        lensFlare.position.copy(spotLight.position);
+        scene.add(lensFlare);
+
+        render();
+
+        function render() {
+            stats.update();
+            // bounce the sphere up and down
+            step += controls.bouncingSpeed;
+            // sphere.position.x = 20 + ( 10 * (Math.cos(step)));
+            sphere.position.y = 1 + ( 13 * Math.abs(Math.sin(step)));
+
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+
+         function initStats() {
+             var stats = new Stats();
+             return stats;
+         }
+    };
+    window.onload = init;
+</script>
+</body>
+</html>
