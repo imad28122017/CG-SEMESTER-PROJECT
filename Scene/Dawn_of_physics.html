@@ -4,19 +4,9 @@
 <head>
     <title>CG Scene</title>
     <script type="text/javascript" src="../libs/three.js"></script>
-    <script></script>
-    <script type="text/javascript" src="../libs/stats.js"></script>
-    <script type="text/javascript" src="../libs/dat.gui.js"></script>
-
-    <script type="text/javascript" src="../libs/tween.min.js"></script>
-
-    <script type="text/javascript" src="../libs/ParametricGeometries.js"></script>
-    <script type="text/javascript" src="../libs/ConvexGeometry.js"></script>
-
-    <script type="text/javascript" src="../libs/chroma.js"></script>
     <style>
         body {
-            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            /* to go fullscreen */
             margin: 0;
             overflow: hidden;
         }
@@ -24,11 +14,8 @@
     <!-- <h1 >Dawn OF Modern Physics</h1> -->
 </head>
 
-
 <body>
-     
-<div id="Stats-output">
-</div>
+    
 <!-- Div which will hold the Output -->
 <div id="WebGL-output">
 </div>
@@ -39,11 +26,8 @@
     // once everything is loaded, we run our Three.js stuff.
     function init() {
 
-        var stats = initStats();
-
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         var scene = new THREE.Scene();
-     
 
         // create a camera, which defines where we're looking at.
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -56,7 +40,7 @@
         renderer.shadowMapEnabled = true;
 
 
-//hand code
+        //hand code
         var step = 0;
         var mesh;
         var clock = new THREE.Clock();
@@ -90,12 +74,7 @@
 
         }, '../assets/models');
 
-        var onUpdate = function () {
-            var pos = this.pos;
-            console.log(mesh.skeleton);
-        };
-
-//end of hand
+        //end of hand
 
         // create the ground plane
         var textureGrass = THREE.ImageUtils.loadTexture("../assets/grasslight-big.jpg");
@@ -187,6 +166,8 @@
 
         scene.add(tree_1_top);
 
+
+        // tree top2
         var tree_2_topGeometry = new THREE.IcosahedronGeometry(7);
         var tree_2_topMaterial = new THREE.MeshLambertMaterial({color: 0x40EE95});
         var tree_2_top = new THREE.Mesh(tree_2_topGeometry, tree_2_topMaterial);
@@ -197,6 +178,44 @@
         tree_2_top.position.z = 15.5;
 
         scene.add(tree_2_top);
+
+                // tree stem1
+                var stemGeometry = new THREE.BoxGeometry(2.5, 25.5, 1);
+        var stemMaterial = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var stem = new THREE.Mesh(stemGeometry, stemMaterial);
+        stem.castShadow = true;
+
+        stem.position.x = 50;
+        stem.position.y = -2.5;
+        stem.position.z = 13;
+
+        scene.add(stem);
+
+
+        // tree stem2
+        var stem2Geometry = new THREE.BoxGeometry(2.5, 25.5, 1);
+        var stem2Material = new THREE.MeshLambertMaterial({color: 0x613B16});
+        var stem2 = new THREE.Mesh(stem2Geometry, stem2Material);
+        stem2.castShadow = true;
+
+        stem2.position.x = 43;
+        stem2.position.y = -2.5;
+        stem2.position.z = 23;
+
+        scene.add(stem2);
+
+        //apple
+        var sphereGeometry = new THREE.SphereGeometry(0.5, 10.5, 5);
+        var sphereMaterial = new THREE.MeshLambertMaterial({color: 0xff3333});
+        var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+        sphere.position.x = 35;
+        sphere.position.y = 2.5;
+        sphere.position.z = 20;
+        sphere.castShadow = true;
+
+        scene.add(sphere);
+
 
         //Circular rainbow rings
         var points = [
@@ -370,7 +389,6 @@
         scene.add(ar);
         
         //nose
-        
         var noseGeometry = new THREE.BoxGeometry(0.15, -0.25, -0.35);
         var noseMaterial = new THREE.MeshBasicMaterial({color: 0xBDB76B});
         var nose = new THREE.Mesh(noseGeometry, noseMaterial);
@@ -382,42 +400,6 @@
         nose.position.z = 27.7;
 
         scene.add(nose);
-        // stem1
-        var stemGeometry = new THREE.BoxGeometry(2.5, 25.5, 1);
-        var stemMaterial = new THREE.MeshLambertMaterial({color: 0x613B16});
-        var stem = new THREE.Mesh(stemGeometry, stemMaterial);
-        stem.castShadow = true;
-
-        stem.position.x = 50;
-        stem.position.y = -2.5;
-        stem.position.z = 13;
-
-        scene.add(stem);
-
-
-        // //tree stem2
-        var stem2Geometry = new THREE.BoxGeometry(2.5, 25.5, 1);
-        var stem2Material = new THREE.MeshLambertMaterial({color: 0x613B16});
-        var stem2 = new THREE.Mesh(stem2Geometry, stem2Material);
-        stem2.castShadow = true;
-
-        stem2.position.x = 43;
-        stem2.position.y = -2.5;
-        stem2.position.z = 23;
-
-        scene.add(stem2);
-
-        //apple
-        var sphereGeometry = new THREE.SphereGeometry(0.5, 10.5, 5);
-        var sphereMaterial = new THREE.MeshLambertMaterial({color: 0xff3333});
-        var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-
-        sphere.position.x = 35;
-        sphere.position.y = 2.5;
-        sphere.position.z = 20;
-        sphere.castShadow = true;
-
-        scene.add(sphere);
 
         // position and point the camera to the center of the scene
         camera.position.x = -20;
@@ -441,7 +423,6 @@
 
 
         var pointColor = "#ffffff";
-//    var spotLight = new THREE.SpotLight( pointColor);
         var spotLight = new THREE.DirectionalLight(pointColor);
         spotLight.position.set(30, 10, -50);
         spotLight.castShadow = true;
@@ -504,20 +485,14 @@
         render();
 
         function render() {
-            stats.update();
             // bounce the sphere up and down
             step += controls.bouncingSpeed;
-            // sphere.position.x = 20 + ( 10 * (Math.cos(step)));
             sphere.position.y = 1 + ( 13 * Math.abs(Math.sin(step)));
 
             requestAnimationFrame(render);
             renderer.render(scene, camera);
         }
 
-         function initStats() {
-             var stats = new Stats();
-             return stats;
-         }
     };
     window.onload = init;
 </script>
